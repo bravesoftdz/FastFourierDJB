@@ -20,23 +20,23 @@ Modification of FastFourierDJB
  implied. See the License for the specific language governing    
  rights and limitations under the License.                       
                                                                  
- (C) 2003, 2004 Milenko Mitrovic <dcoder@dsp-worx.de>
- 
- Modifications by Alexey V. Nikitaev
- email     : nikitayev@mail.ru
- web       : https://github.com/nikitayev/
- date      : 02-10-2015
-
- Sample:
- 
-// применим окно Хэмминга
-for i := 0 to zFFTLength - 1 do
+ (C) 2003, 2004 Milenko Mitrovic <dcoder@dsp-worx.de>			 
+																 
+ Modifications by Alexey V. Nikitaev							 
+ email     : nikitayev@mail.ru 									 
+ web       : https://github.com/nikitayev/						 
+ date      : 02-10-2015 										 
+																 
+ Sample:														 
+																 
+// применим окно Хэмминга										 
+for i := 0 to zFFTLength - 1 do									 
   zFFT[i].re := GetWindowingValue(zFFT[i].re, i, zFFTLength, TWindowMode.wmHamming);
-  
-dspDoFFT(zFFT, zFFTLength, False, True, True, zFFTSwap);
-
-zMaxValue := 0;
-for i := 0 to (zFFTLength shr 1) - 1 do
-begin
-  aFFT[i] := FFTSum(zFFT[i].re, zFFT[i].im);
-end;
+																 
+dspDoFFT(zFFT, zFFTLength, False, True, True, zFFTSwap);		 
+																 
+zMaxValue := 0;													 
+for i := 0 to (zFFTLength shr 1) - 1 do							 
+begin															 
+  aFFT[i] := FFTSum(zFFT[i].re, zFFT[i].im);					 
+end;															 
