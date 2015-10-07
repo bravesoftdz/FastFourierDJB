@@ -118,6 +118,7 @@ implementation
 
 uses SysUtils;
 
+{
 procedure scalec(a: PComplexArray; n: integer; u: Single);
 asm
   push      ebx
@@ -162,6 +163,17 @@ asm
   jl        @@CFPU
 @@End:
   pop       ebx
+end;}
+
+procedure scalec(a: PComplexArray; n: integer; u: Float);
+var
+  i: Integer;
+begin
+  for I := 0 to n - 1 do
+  begin
+    a[I].re := a[I].re * u;
+    a[I].im := a[I].im * u;
+  end;
 end;
 
 procedure ReOrderFFT(a: PComplexArray; Size: integer; RevBin: PWORDArray; Inverse: Boolean;
