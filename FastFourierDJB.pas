@@ -47,6 +47,7 @@ var
   RevBits4096: array [0 .. 4095] of WORD;
   RevBits8192: array [0 .. 8191] of WORD;
   RevBits16384: array [0 .. 16383] of WORD;
+  RevBits32768: array [0 .. 32767] of WORD;
 
 var
   d16: array [0 .. 2] of TComplex;
@@ -60,6 +61,7 @@ var
   d4096: array [0 .. 510] of TComplex;
   d8192: array [0 .. 1022] of TComplex;
   d16384: array [0 .. 2046] of TComplex;
+  d32768: array [0 .. 4094] of TComplex;
 
 const
   SqrtHalf: Float = 0.70710678118654752440084436210484903;
@@ -78,6 +80,7 @@ const
   scalec4096: Float = 0.000244140625;
   scalec8192: Float = 0.0001220703125;
   scalec16384: Float = 0.00006103515625;
+  scalec32768: Float = 0.000030517578125;
 
 procedure fft2(a: PComplexArray);
 procedure fft4(a: PComplexArray);
@@ -93,6 +96,7 @@ procedure fft2048(a: PComplexArray);
 procedure fft4096(a: PComplexArray);
 procedure fft8192(a: PComplexArray);
 procedure fft16384(a: PComplexArray);
+procedure fft32768(a: PComplexArray);
 
 procedure ifft2(a: PComplexArray);
 procedure ifft4(a: PComplexArray);
@@ -108,6 +112,7 @@ procedure ifft2048(a: PComplexArray);
 procedure ifft4096(a: PComplexArray);
 procedure ifft8192(a: PComplexArray);
 procedure ifft16384(a: PComplexArray);
+procedure ifft32768(a: PComplexArray);
 
 procedure scale2(a: PComplexArray);
 procedure scale4(a: PComplexArray);
@@ -123,6 +128,7 @@ procedure scale2048(a: PComplexArray);
 procedure scale4096(a: PComplexArray);
 procedure scale8192(a: PComplexArray);
 procedure scale16384(a: PComplexArray);
+procedure scale32768(a: PComplexArray);
 
 procedure mul2(a, b: PComplexArray);
 procedure mul4(a, b: PComplexArray);
@@ -138,6 +144,7 @@ procedure mul2048(a, b: PComplexArray);
 procedure mul4096(a, b: PComplexArray);
 procedure mul8192(a, b: PComplexArray);
 procedure mul16384(a, b: PComplexArray);
+procedure mul32768(a, b: PComplexArray);
 
 implementation
 
@@ -435,6 +442,14 @@ begin
   c8192(a);
 end;
 
+procedure c32768(a: PComplexArray); inline;
+begin
+  cpassbig(a, @d32768, 4096);
+  c8192(@a^[24576]);
+  c8192(@a^[16384]);
+  c16384(a);
+end;
+
 procedure UNTRANSFORM(a0, a1, a2, a3: PComplex; wre, wim: Float);
 var
   t1, t2, t3, t4, t5, t6: Float;
@@ -713,6 +728,14 @@ begin
   upassbig(a, @d16384, 2048);
 end;
 
+procedure u32768(a: PComplexArray);
+begin
+  u16384(a);
+  u8192(@a^[16384]);
+  u8192(@a^[24576]);
+  upassbig(a, @d32768, 4096);
+end;
+
 procedure fft2(a: PComplexArray);
 begin
   c2(a);
@@ -783,6 +806,11 @@ begin
   c16384(a);
 end;
 
+procedure fft32768(a: PComplexArray);
+begin
+  c32768(a);
+end;
+
 procedure ifft2(a: PComplexArray);
 begin
   c2(a);
@@ -851,6 +879,11 @@ end;
 procedure ifft16384(a: PComplexArray);
 begin
   u16384(a);
+end;
+
+procedure ifft32768(a: PComplexArray);
+begin
+  u32768(a);
 end;
 
 procedure scalec(a: PComplexArray; n: integer; u: Float);
@@ -932,6 +965,11 @@ end;
 procedure scale16384(a: PComplexArray);
 begin
   scalec(a, 16384, scalec16384);
+end;
+
+procedure scale32768(a: PComplexArray);
+begin
+  scalec(a, 32768, scalec32768);
 end;
 
 procedure mulc(a, b: PComplexArray; n: integer);
@@ -1024,6 +1062,11 @@ begin
   mulc(a, b, 16384);
 end;
 
+procedure mul32768(a, b: PComplexArray);
+begin
+  mulc(a, b, 32768);
+end;
+
 procedure InitSinCosTable;
 
   procedure SinCosTable(n: integer; s: PComplexArray);
@@ -1064,6 +1107,7 @@ begin
   SinCosTable(4096, @d4096);
   SinCosTable(8192, @d8192);
   SinCosTable(16384, @d16384);
+  SinCosTable(32768, @d32768);
 end;
 
 procedure InitRevBitsTable;
@@ -1111,6 +1155,7 @@ begin
   CopyFromTo(@RevBits2048, @RevBits4096, @x, @z, @m);
   CopyFromTo(@RevBits4096, @RevBits8192, @x, @z, @m);
   CopyFromTo(@RevBits8192, @RevBits16384, @x, @z, @m);
+  CopyFromTo(@RevBits16384, @RevBits32768, @x, @z, @m);
 end;
 
 

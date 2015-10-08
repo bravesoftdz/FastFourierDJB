@@ -292,6 +292,12 @@ begin
           if ReOrder then
             ReOrderFFT(Cplx, FFTSize, @RevBits16384, Inverse, SwapBuffer);
         end;
+      32768:
+        begin
+          fft32768(Cplx);
+          if ReOrder then
+            ReOrderFFT(Cplx, FFTSize, @RevBits32768, Inverse, SwapBuffer);
+        end;
     end;
   end
   else
@@ -408,6 +414,14 @@ begin
           if ReOrder then
             ReOrderFFT(Cplx, FFTSize, @RevBits16384, Inverse, SwapBuffer);
           ifft16384(Cplx);
+        end;
+      32768:
+        begin
+          if Scale then
+            scalec(Cplx, 32768, ScaleFFT32768);
+          if ReOrder then
+            ReOrderFFT(Cplx, FFTSize, @RevBits32768, Inverse, SwapBuffer);
+          ifft32768(Cplx);
         end;
     end;
   end;

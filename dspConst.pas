@@ -72,6 +72,8 @@ const
   ScaleFFT8192 = ScaleFFT4096 / 2;
   { Used by the Inverse 16384 Point FFT to Scaledown the Samples. }
   ScaleFFT16384 = ScaleFFT8192 / 2;
+  { Used by the Inverse 32768 Point FFT to Scaledown the Samples. }
+  ScaleFFT32768 = ScaleFFT16384 / 2;
 
   { Used by DSP Filters to Set the default Split Size. This is needed
     when a large Buffer arrives and the Application would't respond until the
@@ -141,7 +143,7 @@ type
   { Pointer to an array of 8192 TComplex Values. }
   PComplexArray = ^TComplexArray;
   { Array of 8192 TComplex Values. }
-  TComplexArray = array [0 .. 16383] of TComplex;
+  TComplexArray = array [0 .. 32767] of TComplex;
   { Array of 8192 TComplex Values. }
 
   { Indicates a 24Bit Sample. Use Cvt24BitTo32 and Cvt32BitTo24 to convert those Samples to 32Bit and back to 24Bit }
@@ -157,34 +159,34 @@ type
   { Used internal by the FFT to setup Reverse Bins Variables. Pointer to 16 Bit WORD Array. }
   PWORDArray = ^TWORDArray;
   { Used internal by the FFT to setup Reverse Bins Variables. 16 Bit WORD Array. }
-  TWORDArray = array [0 .. 16383] of WORD;
+  TWORDArray = array [0 .. 32767] of WORD;
   { Used internal by the DSP Components to access the Audio Buffer. Pointer to unsigned 8 Bit Integer. }
   PByteArray = ^TByteArray;
   { Used internal by the DSP Components to access the Audio Buffer. unsigned 8 Bit Integer. }
-  TByteArray = array [0 .. 16383] of Byte;
+  TByteArray = array [0 .. 32767] of Byte;
   { Used internal by the DSP Components to access the Audio Buffer. Pointer to 16 Bit Integer. }
   PSmallIntArray = ^TSmallIntArray;
   { Used internal by the DSP Components to access the Audio Buffer. 16 Bit Integer. }
-  TSmallIntArray = array [0 .. 16383] of SmallInt;
+  TSmallIntArray = array [0 .. 32767] of SmallInt;
   { Used internal by the DSP Components to access the Audio Buffer. Pointer to 24 Bit Integer. }
   PInteger24Array = ^TInteger24Array;
   { Used internal by the DSP Components to access the Audio Buffer. 24 Bit Integer. }
-  TInteger24Array = array [0 .. 16383] of T24BitSample;
+  TInteger24Array = array [0 .. 32767] of T24BitSample;
   { Used internal by the DSP Components to access the Audio Buffer. Pointer to 32 Bit Integer. }
   PIntegerArray = ^TIntegerArray;
   { Used internal by the DSP Components to access the Audio Buffer. 32 Bit Integer. }
-  TIntegerArray = array [0 .. 16383] of integer;
+  TIntegerArray = array [0 .. 32767] of integer;
   { Used internal by the DSP Components to access the Audio Buffer. Pointer to 32 Bit Float. }
   PFloatArray = ^TFloatArray;
   { Used internal by the DSP Components to access the Audio Buffer. 32Bit Float. }
-  TFloatArray = array [0 .. 16383] of Float;
+  TFloatArray = array [0 .. 32767] of Float;
   { Used internal by the DSP Components to access the Audio Buffer. Pointer to 64 Bit Float. }
   //PDoubleArray = ^TDoubleArray;
   { Used internal by the DSP Components to access the Audio Buffer. 64Bit Float. }
   //TDoubleArray = array [0 .. 16383] of Double;
 
   { Used internal by the Equalizer Component to setup Equalizer Bands and Amplification. }
-  TEqualizerBands = array [0 .. MaxChannels - 1] of array [0 .. 16383] of Float;
+  TEqualizerBands = array [0 .. MaxChannels - 1] of array [0 .. 32767] of Float;
   { Used internal by the Equalizer Component to temporary store previous processed Samples. }
   TEqualizerPrevOut = array [0 .. MaxChannels - 1] of array [0 .. 2047]
     of Float;
