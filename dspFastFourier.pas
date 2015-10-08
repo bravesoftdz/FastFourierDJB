@@ -119,19 +119,19 @@ implementation
 uses SysUtils;
 
 {
-procedure scalec(a: PComplexArray; n: integer; u: Single);
-asm
+  procedure scalec(a: PComplexArray; n: integer; u: Single);
+  asm
   push      ebx
   shl       edx, 3
   xor       ebx, ebx
   cmp       hasSSE, 0
   je        @@3DNOW
-@@CSSE:
+  @@CSSE:
   cmp       edx, 16
   jl        @@3DNOW
   movss     xmm7, u
   shufps    xmm7, xmm7, $0
-@@Loop2:
+  @@Loop2:
   movaps    xmm0, [eax+ebx]
   mulps     xmm0, xmm7
   movaps    [eax+ebx], xmm0
@@ -139,13 +139,13 @@ asm
   cmp       ebx, edx
   jl        @@Loop2
   jmp       @@End
-@@3DNOW:
+  @@3DNOW:
   cmp       has3DNow, 0
   je        @@CFPU
   femms
   movd      mm7, u
   punpckldq mm7, mm7
-@@Loop1:
+  @@Loop1:
   movq      mm0, [eax+ebx]
   pfmul     mm0, mm7
   movq      [eax+ebx], mm0
@@ -154,30 +154,29 @@ asm
   jl        @@Loop1
   femms
   jmp       @@End
-@@CFPU:
+  @@CFPU:
   fld       [eax+ebx]
   fmul      u
   fstp      [eax+ebx]
   add       ebx, 4
   cmp       ebx, edx
   jl        @@CFPU
-@@End:
+  @@End:
   pop       ebx
-end;}
+  end; }
 
 procedure scalec(a: PComplexArray; n: integer; u: Float);
 var
-  i: Integer;
+  i: integer;
 begin
-  for I := 0 to n - 1 do
+  for i := 0 to n - 1 do
   begin
-    a[I].re := a[I].re * u;
-    a[I].im := a[I].im * u;
+    a[i].re := a[i].re * u;
+    a[i].im := a[i].im * u;
   end;
 end;
 
-procedure ReOrderFFT(a: PComplexArray; Size: integer; RevBin: PWORDArray; Inverse: Boolean;
-  SwapBuffer: Pointer);
+procedure ReOrderFFT(a: PComplexArray; Size: integer; RevBin: PWORDArray; Inverse: Boolean; SwapBuffer: Pointer);
 var
   tmp: PComplexArray;
   i: integer;
@@ -290,7 +289,8 @@ begin
       16384:
         begin
           fft16384(Cplx);
-          if ReOrder then ReOrderFFT(Cplx,FFTSize,@RevBits16384,Inverse,SwapBuffer);
+          if ReOrder then
+            ReOrderFFT(Cplx, FFTSize, @RevBits16384, Inverse, SwapBuffer);
         end;
     end;
   end
@@ -403,8 +403,10 @@ begin
         end;
       16384:
         begin
-          if Scale   then scalec(Cplx,16384,ScaleFFT16384);
-          if ReOrder then ReOrderFFT(Cplx,FFTSize,@RevBits16384,Inverse,SwapBuffer);
+          if Scale then
+            scalec(Cplx, 16384, ScaleFFT16384);
+          if ReOrder then
+            ReOrderFFT(Cplx, FFTSize, @RevBits16384, Inverse, SwapBuffer);
           ifft16384(Cplx);
         end;
     end;

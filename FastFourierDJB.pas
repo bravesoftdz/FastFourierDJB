@@ -432,7 +432,7 @@ begin
   cpassbig(a, @d16384, 2048);
   c4096(@a^[12288]);
   c4096(@a^[8192]);
-  c4096(a);
+  c8192(a);
 end;
 
 procedure UNTRANSFORM(a0, a1, a2, a3: PComplex; wre, wim: Float);
