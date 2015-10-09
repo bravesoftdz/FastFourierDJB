@@ -193,7 +193,7 @@ var
   N: Integer;
 
   // это индекс комплексного числа в массиве arr
-  i, j: Integer;
+  i: Integer;
   Nmax: Integer;
 
   // это частота дискретизации
@@ -214,12 +214,8 @@ begin
   SetLength(amp, Nmax);
   SetLength(phase, Nmax);
 
-  // это индекс гармоники. в конце алгоритма он будет равен количеству найденных гармоник
-  j := 1;
-  i := 0;
-
   // получаем остальные гармоники
-  for i := 1 to Nmax - 1 do
+  for i := 0 to Nmax - 1 do
   begin
     re := arr[i].X;
     im := arr[i].Y;
@@ -228,24 +224,22 @@ begin
     abs2 := re * re + im * im;
 
     // вычисляем апмлитуду. 2.0 - для устранения зеркального эффекта
-    amp[j] := 2.0 * sqrt(abs2) / N;
+    amp[i] := 2.0 * sqrt(abs2) / N;
 
     // вычисляем фазу косинуса в радианах
-    phase[j] := ArcTan2(im, re);
+    phase[i] := ArcTan2(im, re);
 
     // преобразуем косинус в синус. M_PI2 = пи/2, M_PI = пи
     // в результате фаза будет в диапазоне от -пи/2 до +пи/2
-    phase[j] := phase[j] + (PI * 0.5);
-    if (phase[j] > PI) then
-      phase[j] := phase[j] - 2 * PI;
+    phase[i] := phase[i] + (PI * 0.5);
+    if (phase[i] > PI) then
+      phase[i] := phase[i] - 2 * PI;
 
     // можно еще преобразовать радианы в градусы
-    phase[j] := phase[j] * (180.0 / PI);
+    phase[i] := phase[i] * (180.0 / PI);
 
     // получаем частоту
-    freq[j] := (nSamplesPerSec * i) / N;
-
-    inc(j);
+    freq[i] := (nSamplesPerSec * i) / N;
   end;
 end;
 
