@@ -52,6 +52,9 @@ procedure FFT2EKG_AlgLib(const aFFT: TComplex1DArray; aFFTSize: TDCFFTSize; var 
 procedure FFT_CalcFreqAndPhase(aFFTSize: TDCFFTSize; var arr: TComplex1DArray; nSamplesPerSec: AlglibFloat;
   out freq, amp, phase: TReal1DArray);
 
+procedure FFT_CalcAmpAndFreq(aFFTSize: TDCFFTSize; var arr: TComplex1DArray; aTotalTimeSec: AlglibFloat;
+  out freq, amp: TReal1DArray);
+
 function FFTDeleteLow(var aFFT: TComplex1DArray; aLowLimit: AlglibFloat): Integer;
 procedure FFTPack(var aFFT: TComplex1DArray; aFFTSize: TDCFFTSize);
 procedure FFTUnPack(var aFFT: TComplex1DArray; aFFTSize: TDCFFTSize);
@@ -240,6 +243,49 @@ begin
 
     // получаем частоту
     freq[i] := (nSamplesPerSec * i) / N;
+  end;
+end;
+
+procedure FFT_CalcAmpAndFreq(aFFTSize: TDCFFTSize; var arr: TComplex1DArray; aTotalTimeSec: AlglibFloat;
+  out freq, amp: TReal1DArray);
+var
+  N: Integer;
+
+  // это индекс комплексного числа в массиве arr
+  i: Integer;
+  Nmax: Integer;
+
+  // это частота дискретизации
+  abs2: AlglibFloat;
+  re, im: AlglibFloat;
+
+begin
+  N := GetFFTLength(aFFTSize);
+
+  SetLength(arr, N);
+
+  // убираем зеркальный эффект, просто отбрасывая вторую половину
+  Nmax := (N + 1) div 2;
+
+  // мы хотим получить массив гармоник.
+  // это массив амплитуд, массив частот и массив фаз для каждой гармоники
+  SetLength(freq, Nmax);
+  SetLength(amp, Nmax);
+
+  // получаем остальные гармоники
+  for i := 0 to Nmax - 1 do
+  begin
+    re := arr[i].X;
+    im := arr[i].Y;
+
+    // это квадрат модуля комплексного числа arr[i]
+    abs2 := re * re + im * im;
+
+    // вычисляем апмлитуду. 2.0 - для устранения зеркального эффекта
+    amp[i] := 2.0 * sqrt(abs2) / N;
+
+    // получаем частоту
+    freq[i] := i / aTotalTimeSec;
   end;
 end;
 
